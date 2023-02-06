@@ -8,7 +8,7 @@ let socket;
 const Chat = () => {
     const [name, setName] = useState("");
     const [room, setRoom] = useState("");
-    const [messages, setMessages] = useState("");
+    const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const ENDPOINT = "localhost:5000";
     const location = useLocation();
@@ -35,6 +35,28 @@ const Chat = () => {
         });
     }, [messages]);
 
-    return <h1>CHAT</h1>;
+    const sendMessage = (event) => {
+        event.preventDefault();
+        if (message) {
+            socket.emit("sendMessage", message, () => setMessage(""));
+        }
+    };
+
+    console.log(message, messages);
+
+    return (
+        <h1>
+            <div className="outerContainer">
+                <div className="container">
+                    <input
+                        type="text"
+                        defaultValue={message}
+                        onChange={(event) => setMessage(event.target.value)}
+                        onKeyDown={(event) => (event.key === "Enter" ? sendMessage(event) : null)}
+                    />
+                </div>
+            </div>
+        </h1>
+    );
 };
 export default Chat;
